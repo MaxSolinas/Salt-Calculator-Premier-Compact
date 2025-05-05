@@ -1,0 +1,118 @@
+<h2 style="text-align: center;">Calculateur de consommation de sel pour adoucisseur Kinetico Premier Compact XP</h2>
+
+<div style="max-width: 400px; margin: 0 auto;">
+  <div style="display: flex; flex-direction: column; gap: 10px;">
+
+    <div style="display: flex; flex-direction: column;">
+      <label style="margin-bottom: 5px;">Dureté de l'eau brute :</label>
+      <div style="display: flex; gap: 10px;">
+        <input type="number" id="dureteEauCompact" style="padding: 6px; width: 50%; box-sizing: border-box;" placeholder="ex: 300">
+        <select id="uniteDureteCompact" style="padding: 6px; width: 50%; box-sizing: border-box;">
+          <option value="mgL">mg/L CaCO₃</option>
+          <option value="french">°f (français)</option>
+          <option value="german">°d (allemand)</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      <label for="nbPersonnesCompact" style="margin-bottom: 5px;">Nombre de personnes :</label>
+      <select id="nbPersonnesCompact" style="padding: 6px; width: 100%;">
+        <option value="1">1 personne</option>
+        <option value="2">2 personnes</option>
+        <option value="3" selected>3 personnes</option>
+        <option value="4">4 personnes</option>
+        <option value="5">5 personnes</option>
+        <option value="6">6 personnes</option>
+        <option value="7">7 personnes</option>
+      </select>
+    </div>
+
+    <div style="text-align: center; margin-top: 10px;">
+      <button id="calculerSelCompact" style="background-color: #0D7EBC; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; width: 160px;">
+        Calculer
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<h3 style="text-align: center;">Résultats :</h3>
+<p id="resultatSelCompact" style="text-align: center; margin: 10px 0;"></p>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const CONSOMMATION_PAR_PERSONNE_L_PAR_JOUR = 100;
+    const JOURS_PAR_AN = 365;
+    const SEL_PAR_REGEN_KG = 0.34;
+    const POIDS_KIT_BLOCS = 16; // 2 blocs de 8 kg
+    const DURETE_RESIDUELLE = 60;
+
+    function convertirEnMgL(valeur, unite) {
+        if (unite === 'french') return valeur * 10;
+        if (unite === 'german') return valeur * 17.8;
+        return valeur;
+    }
+
+    function getVolumeParCycle(dureteMgL) {
+        if (dureteMgL <= 108) return 1420;
+        if (dureteMgL <= 115) return 1328;
+        if (dureteMgL <= 123) return 1235;
+        if (dureteMgL <= 132) return 1143;
+        if (dureteMgL <= 143) return 1051;
+        if (dureteMgL <= 156) return 958;
+        if (dureteMgL <= 171) return 866;
+        if (dureteMgL <= 191) return 773;
+        if (dureteMgL <= 215) return 681;
+        if (dureteMgL <= 230) return 635;
+        if (dureteMgL <= 247) return 589;
+        if (dureteMgL <= 266) return 543;
+        if (dureteMgL <= 290) return 496;
+        if (dureteMgL <= 318) return 450;
+        if (dureteMgL <= 352) return 404;
+        if (dureteMgL <= 394) return 358;
+        if (dureteMgL <= 449) return 312;
+        return 266;
+    }
+
+    document.getElementById('calculerSelCompact').addEventListener('click', function() {
+        const dureteInput = parseFloat(document.getElementById('dureteEauCompact').value);
+        const nbPersonnes = parseInt(document.getElementById('nbPersonnesCompact').value);
+        const unite = document.getElementById('uniteDureteCompact').value;
+        const resultat = document.getElementById('resultatSelCompact');
+
+        if (isNaN(dureteInput) || isNaN(nbPersonnes)) {
+            resultat.innerText = "Veuillez remplir correctement tous les champs.";
+            return;
+        }
+
+        const dureteMgL = convertirEnMgL(dureteInput, unite);
+
+        if (dureteMgL > 810) {
+            resultat.innerText = "La dureté maximale autorisée est de 810 mg/L.";
+            return;
+        }
+
+        const dureteTraitee = dureteMgL - DURETE_RESIDUELLE;
+        if (dureteTraitee <= 0) {
+            resultat.innerText = "La dureté brute doit être supérieure à 60 mg/L.";
+            return;
+        }
+
+        const volumeParCycle = getVolumeParCycle(dureteMgL);
+        const consommationAnL = nbPersonnes * CONSOMMATION_PAR_PERSONNE_L_PAR_JOUR * JOURS_PAR_AN;
+        const consommationAnM3 = consommationAnL / 1000;
+        const nbRegenAn = consommationAnL / volumeParCycle;
+        const selAnKg = nbRegenAn * SEL_PAR_REGEN_KG;
+        const kitsBlocsAn = Math.ceil(selAnKg / POIDS_KIT_BLOCS);
+
+        resultat.innerHTML = `
+            <strong style="color: #0D7EBC;">Paramètres utilisés :</strong><br>
+            - Volume d'eau estimé : 100 L/personne/jour (total : ${consommationAnM3.toFixed(1)} m³/an)<br>
+            - Dureté résiduelle recommandée : 60 mg/L CaCO₃<br><br>
+            <strong style="color: #0D7EBC;">Consommation de sel estimée :</strong><br><br>
+            - Environ ${kitsBlocsAn} kits de 2 blocs de 8 kg par an (${selAnKg.toFixed(1)} kg)
+        `;
+    });
+});
+</script>
