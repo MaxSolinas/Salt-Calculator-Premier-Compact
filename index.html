@@ -1,52 +1,10 @@
-<h2 style="text-align: center;">Calculateur de consommation de sel pour adoucisseur Kinetico Premier Compact XP</h2>
-
-<div style="max-width: 400px; margin: 0 auto;">
-  <div style="display: flex; flex-direction: column; gap: 10px;">
-
-    <div style="display: flex; flex-direction: column;">
-      <label style="margin-bottom: 5px;">Dureté de l'eau brute :</label>
-      <div style="display: flex; gap: 10px;">
-        <input type="number" id="dureteEauCompact" style="padding: 6px; width: 50%; box-sizing: border-box;" placeholder="ex: 300">
-        <select id="uniteDureteCompact" style="padding: 6px; width: 50%; box-sizing: border-box;">
-          <option value="mgL">mg/L CaCO₃</option>
-          <option value="french">°f (français)</option>
-          <option value="german">°d (allemand)</option>
-        </select>
-      </div>
-    </div>
-
-    <div style="display: flex; flex-direction: column;">
-      <label for="nbPersonnesCompact" style="margin-bottom: 5px;">Nombre de personnes :</label>
-      <select id="nbPersonnesCompact" style="padding: 6px; width: 100%;">
-        <option value="1">1 personne</option>
-        <option value="2">2 personnes</option>
-        <option value="3" selected>3 personnes</option>
-        <option value="4">4 personnes</option>
-        <option value="5">5 personnes</option>
-        <option value="6">6 personnes</option>
-        <option value="7">7 personnes</option>
-      </select>
-    </div>
-
-    <div style="text-align: center; margin-top: 10px;">
-      <button id="calculerSelCompact" style="background-color: #0D7EBC; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; width: 160px;">
-        Calculer
-      </button>
-    </div>
-
-  </div>
-</div>
-
-<h3 style="text-align: center;">Résultats :</h3>
-<p id="resultatSelCompact" style="text-align: center; margin: 10px 0;"></p>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const CONSOMMATION_PAR_PERSONNE_L_PAR_JOUR = 100;
     const JOURS_PAR_AN = 365;
     const SEL_PAR_REGEN_KG = 0.34;
-    const POIDS_KIT_BLOCS = 16; // 2 blocs de 8 kg
-    const DURETE_RESIDUELLE = 60;
+    const POIDS_KIT_BLOCS = 8; // 2 blocs de 4 kg
+    const DURETE_RESIDUELLE = 60; // mg/L CaCO₃
 
     function convertirEnMgL(valeur, unite) {
         if (unite === 'french') return valeur * 10;
@@ -72,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (dureteMgL <= 352) return 404;
         if (dureteMgL <= 394) return 358;
         if (dureteMgL <= 449) return 312;
+        if (dureteMgL <= 523) return 266;  
         return 266;
     }
 
@@ -99,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        const volumeParCycle = getVolumeParCycle(dureteMgL);
+        const volumeParCycle = getVolumeParCycle(dureteTraitee);
         const consommationAnL = nbPersonnes * CONSOMMATION_PAR_PERSONNE_L_PAR_JOUR * JOURS_PAR_AN;
         const consommationAnM3 = consommationAnL / 1000;
         const nbRegenAn = consommationAnL / volumeParCycle;
@@ -111,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
             - Volume d'eau estimé : 100 L/personne/jour (total : ${consommationAnM3.toFixed(1)} m³/an)<br>
             - Dureté résiduelle recommandée : 60 mg/L CaCO₃<br><br>
             <strong style="color: #0D7EBC;">Consommation de sel estimée :</strong><br><br>
-            - Environ ${kitsBlocsAn} kits de 2 blocs de 8 kg par an (${selAnKg.toFixed(1)} kg)
+            - Environ ${kitsBlocsAn} kits de 2 blocs de 4 kg par an (${selAnKg.toFixed(1)} kg)
         `;
     });
 });
