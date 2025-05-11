@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const CONSOMMATION_PAR_PERSONNE_L_PAR_JOUR = 100;
     const JOURS_PAR_AN = 365;
     const SEL_PAR_REGEN_KG = 0.34;
-    const POIDS_KIT_BLOCS = 8; // 2 blocs de 4 kg
-    const DURETE_RESIDUELLE = 60; // mg/L CaCO₃
+    const POIDS_KIT_8KG = 8; // 2 blocs de 4 kg
+    const DURETE_RESIDUELLE = 60;
 
     function convertirEnMgL(valeur, unite) {
         if (unite === 'french') return valeur * 10;
@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (dureteMgL <= 352) return 404;
         if (dureteMgL <= 394) return 358;
         if (dureteMgL <= 449) return 312;
-        if (dureteMgL <= 523) return 266;  
         return 266;
     }
 
@@ -47,8 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const dureteMgL = convertirEnMgL(dureteInput, unite);
 
-        if (dureteMgL > 523) {
-            resultat.innerText = "La dureté maximale autorisée est de 520 mg/L.";
+        if (dureteMgL > 500) {
+            resultat.innerText = "La dureté maximale autorisée est de 500 mg/L.";
             return;
         }
 
@@ -63,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const consommationAnM3 = consommationAnL / 1000;
         const nbRegenAn = consommationAnL / volumeParCycle;
         const selAnKg = nbRegenAn * SEL_PAR_REGEN_KG;
-        const kitsBlocsAn = Math.ceil(selAnKg / POIDS_KIT_BLOCS);
+        const kitsBlocsAn = Math.ceil(selAnKg / POIDS_KIT_8KG);
 
         resultat.innerHTML = `
             <strong style="color: #0D7EBC;">Paramètres utilisés :</strong><br>
