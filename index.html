@@ -1,9 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Test Calculateur de Sel</title>
+</head>
+<body>
+
+<h2>Calculateur Premier Compact XP</h2>
+
+<label>Dureté de l'eau brute :</label>
+<input type="number" id="dureteEauCompact" value="230">
+<select id="uniteDureteCompact">
+  <option value="mgL">mg/L CaCO₃</option>
+  <option value="french">°f (français)</option>
+  <option value="german">°d (allemand)</option>
+</select>
+<br><br>
+
+<label>Nombre de personnes :</label>
+<select id="nbPersonnesCompact">
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3" selected>3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+</select>
+<br><br>
+
+<button id="calculerSelCompact">Calculer</button>
+
+<p id="resultatSelCompact"></p>
+
+<!-- Le script corrigé va ici -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const CONSOMMATION_PAR_PERSONNE_L_PAR_JOUR = 100;
     const JOURS_PAR_AN = 365;
     const SEL_PAR_REGEN_KG = 0.34;
-    const POIDS_KIT_8KG = 8; // 2 blocs de 4 kg
+    const POIDS_KIT_8KG = 8;
     const DURETE_RESIDUELLE = 60;
 
     function convertirEnMgL(valeur, unite) {
@@ -74,3 +108,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+</body>
+</html>
